@@ -1,0 +1,21 @@
+spec:
+  template:
+    spec:
+      serviceAccountName: "app-sample-sa"
+      containers:
+        - name: python-sample
+          args:
+            - /bin/sh
+            - '-c'
+            - >-
+              source /vault/secrets/config.properties && export -p && python app.py
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: 'true'
+        vault.hashicorp.com/role: app-sample-role
+        vault.hashicorp.com/agent-inject-secret-config.properties: example/data/app-sample/info/properties
+        vault.hashicorp.com/agent-inject-template-config.properties: >
+          {{- with secret "example/data/app-sample/info/properties" -}}
+          {{ range $k, $v := .Data.data }}
+            export {{ $k }}="{{ $v }}
+          {{ end }} {{- end -}}
