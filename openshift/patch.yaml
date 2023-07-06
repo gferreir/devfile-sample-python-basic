@@ -3,7 +3,7 @@ spec:
     spec:
       serviceAccountName: "app-sample-sa"
       containers:
-        - name: python-sample
+        - name: app-sample
           args:
             - /bin/sh
             - '-c'
